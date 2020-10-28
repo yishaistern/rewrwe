@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { storedUsers, userScore } from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'test';
+  constructor(private store: Store) {
+    this.getUsers();
+  }
+  getUsers(): void {
+    if (localStorage && localStorage.getItem('users')) {
+      try {
+        const users = JSON.parse(localStorage.getItem('users'));
+        if (Array.isArray(users)) {
+          this.store.dispatch(storedUsers({oldUsers: users}));
+        }
+      } catch (err) {
+        // do nothing
+      }
+    }
+  }
+  title = 'zoomTest';
 }
